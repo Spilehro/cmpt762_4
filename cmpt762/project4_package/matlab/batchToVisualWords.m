@@ -25,7 +25,11 @@ parpool('local', numCores);
 
 %load the files and texton dictionary
 load('../data/traintest.mat','all_imagenames','mapping');
-load('dictionaryHarris.mat','filterBank','dictionary');
+dicth=load('dictionaryHarris.mat','filterBank','dictionary').dictionary;
+filth=load('dictionaryHarris.mat','filterBank','dictionary').filterBank;
+dictr=load('dictionaryRandom.mat','filterBank','dictionary').dictionary;
+filtr=load('dictionaryRandom.mat','filterBank','dictionary').filterBank;
+
 
 source = '../data/';
 target = '../data/'; 
@@ -42,25 +46,30 @@ end
 
 %This is a peculiarity of loading inside of a function with parfor. We need to 
 %tell MATLAB that these variables exist and should be passed to worker pools.
-filterBank = filterBank;
-dictionary = dictionary;
+% filterBank = filterBank;
+% dictionary = dictionary;
 
 %matlab can't save/load inside parfor; accumulate
 %them and then do batch save
 l = length(all_imagenames);
 
-wordRepresentation = cell(l,1);
+wordRepresentationh= cell(l,1);
+wordRepresentationr= cell(l,1);
+
 parfor i=1:l
     fprintf('Converting to visual words %s\n', all_imagenames{i});
     image = imread([source, all_imagenames{i}]);
-    wordRepresentation{i} = getVisualWords(image, filterBank, dictionary);
+    wordRepresentationh{i} = getVisualWords(image, filth, dicth);
+    wordRepresentationr{i} = getVisualWords(image, filtr, dictr);
 end
 
 %dump the files
 fprintf('Dumping the files\n');
 for i=1:l
-    wordMap = wordRepresentation{i};
-    save([target, strrep(all_imagenames{i},'.jpg','.mat')],'wordMap');
+    wordMaph = wordRepresentationh{i};
+    wordMapr = wordRepresentationr{i};
+    save([target, strrep(all_imagenames{i},'.jpg','_Harris.mat')],'wordMaph');
+    save([target, strrep(all_imagenames{i},'.jpg','_Random.mat')],'wordMapr');
 end
 
 %close the pool
