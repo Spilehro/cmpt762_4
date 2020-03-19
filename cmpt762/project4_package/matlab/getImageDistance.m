@@ -8,9 +8,10 @@ function [dist] = getImageDistance(hist1, histSet, method)
     sub = (hist1-histSet).^2;
     sumi = hist1+histSet;
     div = sub./sumi;
+    div(isnan(div))=0;
     sum_end =sum(div,2);
     dist = sum_end./2;
-    dist(isnan(dist))=0;
+    
           
   end
 

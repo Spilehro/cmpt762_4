@@ -1,0 +1,6 @@
+function computeIDF (trainFeatures)
+ [num_imgs,dictionary_size] = size(trainFeatures);
+ IDF = zeros(1,dictionary_size);
+ 
+ 
+end

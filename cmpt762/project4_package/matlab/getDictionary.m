@@ -11,30 +11,30 @@ function [dictionary] = getDictionary(imgPaths, alpha, K, method)
         I = imread(img_name);
         [row,col,ch]=size(I);
         filterResponses = extractFilterResponses(I, filterBank);
-        if(ch==3)  
+        
             
-            [fr fc fch]=size(filterResponses);
-            filterResponses = reshape(filterResponses,[fr*fc,fch]);
-            
-            if(strcmp('Random',method))
-                points = getRandomPoints(I,alpha);
-            end
-            
-            if(strcmp('Harris',method))
-                k=0.05;
-                points = getHarrisPoints(I,alpha,k);
-            end
-            
-           inds = sub2ind([row, col],points(:,2),points(:,1));
-           
-           starti = (i-1)*alpha+1;
-           endi = starti+alpha-1;
-           
-           pixelResponses(starti:endi,:)=filterResponses(inds,:);
-           
+        [fr fc fch]=size(filterResponses);
+        filterResponses = reshape(filterResponses,[fr*fc,fch]);
+
+        if(strcmp('Random',method))
+            points = getRandomPoints(I,alpha);
         end
+
+        if(strcmp('Harris',method))
+            k=0.05;
+            points = getHarrisPoints(I,alpha,k);
+        end
+
+       inds = sub2ind([row, col],points(:,2),points(:,1));
+
+       starti = (i-1)*alpha+1;
+       endi = starti+alpha-1;
+
+       pixelResponses(starti:endi,:)=filterResponses(inds,:);
+           
+        
     end
-    [~, dictionary] = kmeans(pixelResponses, K, 'EmptyAction', 'drop');
+    [~, dictionary] = kmeans(pixelResponses, K, 'EmptyAction', 'drop','MaxIter',1000);
     dict_name = strcat('dictionary',method,'.mat');
     save(dict_name,'dictionary','filterBank');
 end

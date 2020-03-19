@@ -1,4 +1,4 @@
-function batchToVisualWords(numCores) 
+function batchToVisualWords2(numCores) 
 
 % Does parallel computation of the visual words 
 %
@@ -21,7 +21,7 @@ end
 
 fprintf('Starting a pool of workers with %d cores\n', numCores);
 % matlabpool('local',numCores);
-parpool('local', numCores);
+pool=parpool('local', numCores);
 
 %load the files and texton dictionary
 load('../data/traintest.mat','all_imagenames','mapping');
@@ -75,5 +75,6 @@ end
 %close the pool
 fprintf('Closing the pool\n');
 %matlabpool close
+delete(pool);
 
 end
