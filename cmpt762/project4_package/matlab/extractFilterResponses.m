@@ -1,3 +1,4 @@
+
 function [filterResponses] = extractFilterResponses(I, filterBank)
     num_filters = size(filterBank,1);
     [h w ch] = size(I);

@@ -1,8 +1,8 @@
 
-trainFeaturesh = load('visionHarris.mat''trainFeatures').trainFeatures;
+trainFeaturesh = load('visionHarris.mat','trainFeatures').trainFeatures;
 trainFeaturesr = load('visionRandom.mat','trainFeatures').trainFeatures;
 
-[num_imgs,~] = size(trainFeatures);
+[num_imgs,~] = size(trainFeaturesr);
 dh=sum(trainFeaturesh,1);
 IDFh=log(num_imgs./dh);
 dr=sum(trainFeaturesr,1);
