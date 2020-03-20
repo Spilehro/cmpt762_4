@@ -88,3 +88,8 @@ end
 [accuracyr_e,kr_e]= max(corrects(:,3)./test_num);
 [accuracyr_c,kr_c] = max(corrects(:,4)./test_num);
 
+fprintf('kNN_accuracyh_e: %f best k: %d \n',accuracyh_e*100,kh_e);
+fprintf('kNN_accuracyh_c: %f best k: %d \n',accuracyh_c*100,kh_c);
+fprintf('kNN_accuracyr_e: %f best k: %d \n',accuracyr_e*100,kr_e);
+fprintf('kNN_accuracyr_c: %f best k: %d \n',accuracyr_c*100,kr_c);
+

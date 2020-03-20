@@ -95,12 +95,12 @@ accuracyr_l = correctr_l/test_num;
 accuracyh_p = correcth_p/test_num;
 accuracyr_p = correctr_p/test_num;
 
-disp(strcat('HL ',num2str(accuracyh_l)));
-disp(strcat('RL ',num2str(accuracyr_l)));
-disp(strcat('HP ',num2str(accuracyh_p)));
-disp(strcat('RP ',num2str(accuracyr_p)));
+fprintf('SVM_accuracyh_l: %f \n',accuracyh_l*100);
+fprintf('SVM_accuracyr_l: %f \n',accuracyr_l*100);
+fprintf('SVM_accuracyh_p: %f \n',accuracyh_p*100);
+fprintf('SVM_accuracyr_p: %f \n',accuracyr_p*100);
 
-save('visionSVM.mat','Mdlh_l','Mdlr_l','Mdlh_p','Mdlr_p');
+%save('visionSVM.mat','Mdlh_l','Mdlr_l','Mdlh_p','Mdlr_p');
 
 
 

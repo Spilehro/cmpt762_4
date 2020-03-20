@@ -1,21 +1,22 @@
+idfh  =load('idf.mat','IDFh').IDFh;
+idfr  =load('idf.mat','IDFr').IDFr;
+
 test_imagenames = load('../data/traintest.mat','test_imagenames').test_imagenames;
 test_labels = load('../data/traintest.mat','test_labels').test_labels;
 test_num = size(test_imagenames,2);
 root_dir = '../data/';
 
-dictionaryh = load('visionHarris.mat','dictionary').dictionary;
-% dictionaryh=dictionaryh';
-% filterBankh = load('visionHarris.mat','dictionary','filterBank','trainFeatures','trainLabels').filterBank;
-trainFeaturesh = load('visionHarris.mat','trainFeatures').trainFeatures;
-
-% dictionaryr = load('visionRandom.mat','dictionary','filterBank','trainFeatures','trainLabels').dictionary;
-% filterBankr = load('visionRandom.mat','dictionary','filterBank','trainFeatures','trainLabels').filterBank;
+trainFeaturesh= load('visionHarris.mat','trainFeatures').trainFeatures;
 trainFeaturesr = load('visionRandom.mat','trainFeatures').trainFeatures;
 
-trainLables = load('visionHarris.mat','trainLabels').trainLabels;
+dictionary_size = size(trainFeaturesr,2);
+trainimg_num = size(trainFeaturesr,1);
 
-dictionary_size = size(dictionaryh,1);
+trainFeaturesh = trainFeaturesh.*repmat(idfh, [trainimg_num,1]);
+trainFeaturesr = trainFeaturesr.*repmat(idfr, [trainimg_num,1]);
 
+
+trainLables=load('visionRandom.mat','trainLabels').trainLabels;
 confusionh_e = zeros(8,8);
 confusionh_c = zeros(8,8);
 confusionr_e = zeros(8,8);
@@ -40,8 +41,8 @@ for i=1:test_num
     wordMaph = load(wordMaph_name,'wordMaph').wordMaph;
     wordMapr = load(wordMapr_name,'wordMapr').wordMapr;
     
-    histh = getImageFeatures(wordMaph,dictionary_size);
-    histr = getImageFeatures(wordMapr,dictionary_size);
+    histh = getImageFeatures(wordMaph,dictionary_size).*idfh;
+    histr = getImageFeatures(wordMapr,dictionary_size).*idfr;
     
     disth_e = getImageDistance(histh,trainFeaturesh,method_e);
     disth_c = getImageDistance(histh,trainFeaturesh,method_c);
@@ -87,7 +88,7 @@ accuracyh_c = correcth_c/test_num;
 accuracyr_e= correctr_e/test_num;
 accuracyr_c = correctr_c/test_num;
 
-fprintf('NN_accuracyh_e: %f \n',accuracyh_e*100);
-fprintf('NN_accuracyh_c: %f \n',accuracyh_c*100);
-fprintf('NN_accuracyr_e: %f \n',accuracyr_e*100);
-fprintf('NN_accuracyr_c: %f \n',accuracyr_c*100);
+fprintf('NN_IDF_accuracyh_e: %f \n',accuracyh_e*100);
+fprintf('NN_IDF_accuracyh_c: %f \n',accuracyh_c*100);
+fprintf('NN_IDF_accuracyr_e: %f \n',accuracyr_e*100);
+fprintf('NN_IDF_accuracyr_c: %f \n',accuracyr_c*100);

@@ -9,20 +9,34 @@ root_dir = '../data/';
 trainFeaturesh= load('visionHarris.mat','trainFeatures').trainFeatures;
 trainFeaturesr = load('visionRandom.mat','trainFeatures').trainFeatures;
 
-trainLabels=load('visionRandom.mat','trainLabels').trainLabels;
+dictionary_size = size(trainFeaturesr,2);
+trainimg_num = size(trainFeaturesr,1);
+
+trainFeaturesh = trainFeaturesh.*repmat(idfh, [trainimg_num,1]);
+trainFeaturesr = trainFeaturesr.*repmat(idfr, [trainimg_num,1]);
+
+
+trainLables=load('visionRandom.mat','trainLabels').trainLabels;
 
 dictionary_size = size(trainFeaturesr,2);
 
-% tl = templateSVM('Standardize',true,'KernelFunction','linear');
-% 
-% 
-% Mdlh_l = fitcecoc(Xh,Y,'Learners',tl,...
-%     'ClassNames',1:8);
-% 
-% Mdlr_l = fitcecoc(Xr,Y,'Learners',tl,...
-%     'ClassNames',1:8);
-% 
-load('visionSVM.mat');
+k=40;
+
+corrects = zeros(k,4);
+
+confusionh_e = zeros(8,8,k);
+confusionh_c = zeros(8,8,k);
+confusionr_e = zeros(8,8,k);
+confusionr_c= zeros(8,8,k);
+
+correcth_e=0;
+correcth_c=0;
+correctr_e=0;
+correctr_c=0;
+
+method_e = 'euclidean';
+method_c = 'chi2';
+
 
 for i=1:test_num
     wordMap_name =strcat(root_dir,test_imagenames{1,i});
@@ -34,31 +48,54 @@ for i=1:test_num
     wordMaph = load(wordMaph_name,'wordMaph').wordMaph;
     wordMapr = load(wordMapr_name,'wordMapr').wordMapr;
     
-    histh = getImageFeatures(wordMaph,dictionary_size);
-    histr = getImageFeatures(wordMapr,dictionary_size);
+    histh = getImageFeatures(wordMaph,dictionary_size).*idfh;
+    histr = getImageFeatures(wordMapr,dictionary_size).*idfr;
     
-    histh = histh.*idfh;
-    histr = histr.*idfr;
+    disth_e = getImageDistance(histh,trainFeaturesh,method_e);
+    disth_c = getImageDistance(histh,trainFeaturesh,method_c);
     
-    predh_l=predict(Mdlh_l,histh);
-    predr_l = predict(Mdlr_l,histr);
+    distr_e = getImageDistance(histr,trainFeaturesr,method_e);
+    distr_c = getImageDistance(histr,trainFeaturesr,method_c);
     
-    
-    testLabel =test_labels(1,i); 
-    
-    if(predh_l== testLabel)
-        correcth_l = correcth_l+1;
-    end
-    
-    if(predr_l== testLabel)
-        correctr_l = correctr_l+1;
-    end
-    
+    for j=1:k
+        [~,predh_e_i] = mink(disth_e,j);
+        [~,predh_c_i] = mink(disth_c,j);
+        [~,predr_e_i] = mink(distr_e,j);
+        [~,predr_c_i] = mink(distr_c,j);
+        predh_e = mode(trainLables(1,predh_e_i),'all');
+        predh_c =mode(trainLables(1,predh_c_i),'all');
+        predr_e =mode(trainLables(1,predr_e_i),'all');
+        predr_c =mode(trainLables(1,predr_c_i),'all');
+        testLabel =test_labels(1,i); 
+
+        if(predh_e== testLabel)
+            corrects(j,1) = corrects(j,1)+1;
+        end
+
+        if(predh_c== testLabel)
+            corrects(j,2) = corrects(j,2)+1;
+        end
+
+        if(predr_e== testLabel)
+            corrects(j,3) = corrects(j,3)+1;
+        end
+
+        if(predr_c== testLabel)
+            corrects(j,4) = corrects(j,4)+1;
+        end
+        confusionh_e(testLabel,predh_e,j)=confusionh_e(testLabel,predh_e,j)+1;
+        confusionh_c(testLabel,predh_c,j)=confusionh_c(testLabel,predh_c,j)+1;
+        confusionr_e (testLabel,predr_e,j)=confusionr_e(testLabel,predr_e,j)+1;
+        confusionr_c(testLabel,predr_c,j)=confusionr_c(testLabel,predr_c,j)+1; 
+        
+    end      
 end
+[accuracyh_e,kh_e] =max(corrects(:,1)./test_num);
+[accuracyh_c,kh_c] =max(corrects(:,2)./test_num);
+[accuracyr_e,kr_e]= max(corrects(:,3)./test_num);
+[accuracyr_c,kr_c] = max(corrects(:,4)./test_num);
 
-accuracyh_l = correcth_l/test_num;
-accuracyr_l = correctr_l/test_num;
-
-disp(strcat('HL ',num2str(accuracyh_l)));
-disp(strcat('RL ',num2str(accuracyr_l)));
-
+fprintf('idf_accuracyh_e: %f best k: %d \n',accuracyh_e*100,kh_e);
+fprintf('idf_accuracyh_c: %f best k: %d \n',accuracyh_c*100,kh_c);
+fprintf('idf_accuracyr_e: %f best k: %d \n',accuracyr_e*100,kr_e);
+fprintf('idf_accuracyr_c: %f best k: %d \n',accuracyr_c*100,kr_c);

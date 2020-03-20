@@ -1,9 +1,0 @@
-idf  =load('idf.mat','idf').IDF;
-
-trainFeaturesh= load('visionHarris.mat','trainFeatures').trainFeauters;
-trainFeaturesr = load('visionRandom.mat','trainFeatures').trainFeatures;
-
-trainLabels=load('visionRandom.mat','trainLabels').trainLables;
-
-dictionary_size = size(trainfeaturesr,2);
-modelh_l = load('visionSVD.mat','Mdlh_l').Mdlh_l;
