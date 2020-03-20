@@ -39,6 +39,7 @@ Mdlh_l = fitcecoc(Xh,Y,'Learners',tl,...
 Mdlr_l = fitcecoc(Xr,Y,'Learners',tl,...
     'ClassNames',1:8);
 
+fprintf('SVM_IDF Started! \n');
 
 
 for i=1:test_num
