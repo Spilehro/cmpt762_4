@@ -58,9 +58,7 @@ for i=1:test_num
     predh_l=predict(Mdlh_l,histh);
     predr_l = predict(Mdlr_l,histr);
     
-    predh_p=predict(Mdlh_p,histh);
-    predr_p = predict(Mdlr_p,histr);
-    
+   
     
     testLabel =test_labels(1,i); 
     
@@ -70,14 +68,6 @@ for i=1:test_num
     
     if(predr_l== testLabel)
         correctr_l = correctr_l+1;
-    end
-    
-    if(predh_p== testLabel)
-        correcth_p = correcth_p+1;
-    end
-    
-    if(predr_p== testLabel)
-        correctr_p = correctr_p+1;
     end
      
 end
