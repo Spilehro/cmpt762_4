@@ -24,26 +24,26 @@ correctr_l=0;
 correcth_p=0;
 correctr_p=0;
 
-Xh = trainFeaturesh;
-Xr = trainFeaturesr;
-Y = trainLables;
-
-
-tl = templateSVM('Standardize',true,'KernelFunction','linear');
-tp = templateSVM('Standardize',true,'KernelFunction','polynomial');
-
-Mdlh_l = fitcecoc(Xh,Y,'Learners',tl,...
-    'ClassNames',1:8);
-
-Mdlr_l = fitcecoc(Xr,Y,'Learners',tl,...
-    'ClassNames',1:8);
-
-Mdlh_p = fitcecoc(Xh,Y,'Learners',tp,...
-    'ClassNames',1:8);
-
-Mdlr_p = fitcecoc(Xr,Y,'Learners',tp,...
-    'ClassNames',1:8);
-
+% Xh = trainFeaturesh;
+% Xr = trainFeaturesr;
+% Y = trainLables;
+% 
+% 
+% tl = templateSVM('Standardize',true,'KernelFunction','linear');
+% tp = templateSVM('Standardize',true,'KernelFunction','polynomial');
+% 
+% Mdlh_l = fitcecoc(Xh,Y,'Learners',tl,...
+%     'ClassNames',1:8);
+% 
+% Mdlr_l = fitcecoc(Xr,Y,'Learners',tl,...
+%     'ClassNames',1:8);
+% 
+% Mdlh_p = fitcecoc(Xh,Y,'Learners',tp,...
+%     'ClassNames',1:8);
+% 
+% Mdlr_p = fitcecoc(Xr,Y,'Learners',tp,...
+%     'ClassNames',1:8);
+load('visionSVM.mat');
 
 for i=1:test_num
     wordMap_name =strcat(root_dir,test_imagenames{1,i});
