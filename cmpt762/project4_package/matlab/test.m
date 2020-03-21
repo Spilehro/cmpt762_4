@@ -8,7 +8,7 @@ clear all;
  method='Random';
  method2='Harris';
   tic;
-  getDictionary_sift(imgPaths, alpha, K);
+  getDictionary_sift(imgPath, alpha, K);
   toc;
 root_data = '../data/';
 image_name = strcat(root_data,imgPath{1,2});
