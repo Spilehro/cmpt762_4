@@ -25,7 +25,7 @@ confusionr_l = zeros(8,8);
 
 correcth_l=0;
 correctr_l=0;
-
+% 
 Xh = trainFeaturesh;
 Xr = trainFeaturesr;
 Y = trainLables;
@@ -39,6 +39,7 @@ Mdlh_l = fitcecoc(Xh,Y,'Learners',tl,...
 Mdlr_l = fitcecoc(Xr,Y,'Learners',tl,...
     'ClassNames',1:8);
 
+%load('visionSVM_IDF.mat');
 fprintf('SVM_IDF Started! \n');
 
 
